@@ -1,75 +1,135 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Demo: You (almost) got hacked</title>
+<meta charset="UTF-8">
+<title>⚠ System Breach > Accessing Kernel...</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <style>
-  body{font-family: Inter, "Segoe UI", Roboto, monospace; background:#0b1020; color:#e6eef8; display:flex; align-items:center; justify-content:center; min-height:100vh; margin:0; padding:20px;}
-  .card{max-width:720px; width:100%; background:linear-gradient(180deg,#081026 0%, #071428 100%); border-radius:12px; padding:24px; box-shadow:0 10px 30px rgba(2,6,23,0.6); border:1px solid rgba(255,255,255,0.03);}
-  h1{margin:0 0 8px 0; font-size:20px;}
-  p.lead{margin:0 0 18px 0; color:#b6c7df;}
-  .code {background:#021021; border-radius:8px; padding:14px; font-family: "Courier New", monospace; font-size:13px; color:#9be6c9; line-height:1.45; overflow:auto; max-height:220px; border:1px solid rgba(255,255,255,0.03);}
-  .center{display:flex; gap:10px; align-items:center;}
-  .btn{display:inline-block; margin-top:14px; padding:8px 12px; background:#1f6feb; color:white; border-radius:8px; text-decoration:none;}
-  .warning{color:#ffd27a; font-weight:600;}
-  .reveal{display:none; margin-top:14px; background:#071a2b; padding:12px; border-radius:8px; color:#d9eef8;}
-  .tips{margin-top:12px; background:#071a1a; padding:12px; border-radius:8px; color:#dbeff0;}
-  footer{margin-top:14px; font-size:12px; color:#9fb0c8;}
+  body {
+    margin:0; padding:0;
+    background:black; color:#33ff33;
+    font-family: monospace;
+    overflow:hidden;
+  }
+
+  #terminal {
+    padding:20px;
+    white-space: pre-line;
+    font-size:15px;
+  }
+
+  #matrixCanvas {
+    position:fixed;
+    top:0; left:0;
+    width:100vw; height:100vh;
+    background:black;
+    z-index:-1;
+  }
+
+  #reveal {
+    display:none;
+    position:fixed;
+    top:50%; left:50%;
+    transform: translate(-50%, -50%);
+    background:rgba(0,0,0,0.9);
+    border:2px solid #33ff33;
+    padding:20px;
+    font-size:18px;
+    width:80%;
+    max-width:500px;
+    text-align:center;
+  }
+
+  button {
+    margin-top:20px;
+    padding:10px 20px;
+    background:#33ff33;
+    border:none;
+    cursor:pointer;
+    font-weight:bold;
+  }
 </style>
 </head>
+
 <body>
-  <div class="card" role="main">
-    <h1>🔎 Demo: You (almost) got hacked</h1>
-    <p class="lead">This is a harmless demonstration to raise awareness. No data is collected. Close the page anytime.</p>
 
-    <div class="code" id="fakeCode">
-<!-- fake "codes" -->
-<span>Initializing connection...</span><br/>
-<span>handshake: 0x8a3f...9b</span><br/>
-<span>payload &gt; xor(0x4f, key)</span><br/>
-<span>seeking targets...</span><br/>
-<span>found: 192.168.1.42 (unverified)</span><br/>
-<span>injecting shellcode...</span><br/>
-<span>0x6f2a9c... 0x00ff</span><br/>
-<span>establishing persistence...</span><br/>
-<span>-- traces removed --</span>
-    </div>
+<canvas id="matrixCanvas"></canvas>
 
-    <div class="center">
-      <div class="warning" id="warningText">⚠️ WARNING: Unauthorized access detected</div>
-      <a class="btn" id="fakeBtn">Show details</a>
-    </div>
+<div id="terminal"></div>
 
-    <div class="reveal" id="reveal">
-      <strong style="color:#ffd27a">Relax — This is a safe demo.</strong>
-      <p style="margin:8px 0 0 0">You just scanned a QR code that opened a demo page. This page shows fake-looking code to illustrate how alarming "technical" output can look — without doing anything harmful.</p>
-      <div class="tips">
-        <strong>Quick safety tips:</strong>
-        <ul>
-          <li>Always check who provided a QR code before scanning.</li>
-          <li>Never enter passwords on pages you don't trust.</li>
-          <li>Enable two-factor authentication (2FA) on important accounts.</li>
-          <li>Keep your device and apps updated.</li>
-        </ul>
-      </div>
-      <footer>Made for educational/demo purposes only — No data is recorded.</footer>
-    </div>
+<div id="reveal">
+  🔓 <strong>Relax — This was just a demo.</strong><br><br>
+  You weren’t hacked — this simply demonstrates how scary a webpage can *look*.<br><br>
+  📌 **Tip:** Never trust random QR codes.<br>
+  📌 Enable 2FA.<br>
+  📌 Don’t enter passwords on unknown pages.<br><br>
+  <button onclick="window.close()">Close</button>
+</div>
 
-    <script>
-      const btn = document.getElementById('fakeBtn');
-      const reveal = document.getElementById('reveal');
-      const fakeCode = document.getElementById('fakeCode');
-      let clicked = false;
-      btn.addEventListener('click', ()=>{
-        if(!clicked){
-          // simulate "scary" progress then reveal
-          fakeCode.innerHTML = "<span>compiling exploit modules...</span><br/><span>0xdeadbeef...0xfeedface</span><br/><span>running payload...</span><br/><span>encrypting... 92%</span><br/><span>finalizing...</span>";
-          document.getElementById('warningText').textContent = "⚠️ WARNING: System compromise in progress";
-          btn.textContent = "Stop";
-          clicked = true;
-          setTimeout(()=>{ reveal.style.display='block'; fakeCode.style.display='none'; document.getElementById('warningText').textContent = "✅ Demo complete"; btn.style.display='none'; }, 2500);
-        }
+<audio id="alertSound" src="https://www.soundjay.com/buttons/sounds/beep-07.wav"></audio>
+
+<script>
+/* MATRIX BACKGROUND */
+const canvas=document.getElementById("matrixCanvas");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+const letters="01<>#/$%&@".split("");
+const fontSize=14;
+const columns=canvas.width/fontSize;
+const drops=Array(Math.floor(columns)).fill(1);
+
+function drawMatrix(){
+  ctx.fillStyle="rgba(0,0,0,0.05)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="#33ff33";
+  ctx.font=fontSize+"px monospace";
+  drops.forEach((y,i)=>{
+    const text=letters[Math.floor(Math.random()*letters.length)];
+    ctx.fillText(text,i*fontSize,y*fontSize);
+    if(y*fontSize > canvas.height && Math.random()>0.975) drops[i]=0;
+    drops[i]++;
+  })
+}
+setInterval(drawMatrix,40);
+
+/* TERMINAL BOOT SIMULATION */
+const lines=[
+  ">>> Connecting to secure subsystem...",
+  ">>> access_token=0xA93F19FE92",
+  ">>> bypassing firewall rules... OK",
+  ">>> attempting privilege escalation...",
+  ">>> injecting payload...",
+  ">>> system override confirmed.",
+  ">>> downloading user credentials...",
+  ">>> ERROR ⚠ root breach detected",
+  ">>> WARNING: SYSTEM COMPROMISED",
+  "",
+  ">>> Running final sequence..."
+];
+
+let index=0;
+let terminal=document.getElementById("terminal");
+let sound=document.getElementById("alertSound");
+
+function typeLine(){
+  if(index < lines.length){
+    terminal.innerHTML += lines[index] + "\n";
+    sound.play();
+    index++;
+    setTimeout(typeLine, 600);
+  } else {
+    setTimeout(()=>{
+      document.getElementById("reveal").style.display="block";
+    }, 1500);
+  }
+}
+setTimeout(typeLine,1000);
+</script>
+</body>
+</html>
+
       });
     </script>
   </div>
