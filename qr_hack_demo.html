@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Demo: You (almost) got hacked</title>
+<style>
+  body{font-family: Inter, "Segoe UI", Roboto, monospace; background:#0b1020; color:#e6eef8; display:flex; align-items:center; justify-content:center; min-height:100vh; margin:0; padding:20px;}
+  .card{max-width:720px; width:100%; background:linear-gradient(180deg,#081026 0%, #071428 100%); border-radius:12px; padding:24px; box-shadow:0 10px 30px rgba(2,6,23,0.6); border:1px solid rgba(255,255,255,0.03);}
+  h1{margin:0 0 8px 0; font-size:20px;}
+  p.lead{margin:0 0 18px 0; color:#b6c7df;}
+  .code {background:#021021; border-radius:8px; padding:14px; font-family: "Courier New", monospace; font-size:13px; color:#9be6c9; line-height:1.45; overflow:auto; max-height:220px; border:1px solid rgba(255,255,255,0.03);}
+  .center{display:flex; gap:10px; align-items:center;}
+  .btn{display:inline-block; margin-top:14px; padding:8px 12px; background:#1f6feb; color:white; border-radius:8px; text-decoration:none;}
+  .warning{color:#ffd27a; font-weight:600;}
+  .reveal{display:none; margin-top:14px; background:#071a2b; padding:12px; border-radius:8px; color:#d9eef8;}
+  .tips{margin-top:12px; background:#071a1a; padding:12px; border-radius:8px; color:#dbeff0;}
+  footer{margin-top:14px; font-size:12px; color:#9fb0c8;}
+</style>
+</head>
+<body>
+  <div class="card" role="main">
+    <h1>🔎 Demo: You (almost) got hacked</h1>
+    <p class="lead">This is a harmless demonstration to raise awareness. No data is collected. Close the page anytime.</p>
+
+    <div class="code" id="fakeCode">
+<!-- fake "codes" -->
+<span>Initializing connection...</span><br/>
+<span>handshake: 0x8a3f...9b</span><br/>
+<span>payload &gt; xor(0x4f, key)</span><br/>
+<span>seeking targets...</span><br/>
+<span>found: 192.168.1.42 (unverified)</span><br/>
+<span>injecting shellcode...</span><br/>
+<span>0x6f2a9c... 0x00ff</span><br/>
+<span>establishing persistence...</span><br/>
+<span>-- traces removed --</span>
+    </div>
+
+    <div class="center">
+      <div class="warning" id="warningText">⚠️ WARNING: Unauthorized access detected</div>
+      <a class="btn" id="fakeBtn">Show details</a>
+    </div>
+
+    <div class="reveal" id="reveal">
+      <strong style="color:#ffd27a">Relax — This is a safe demo.</strong>
+      <p style="margin:8px 0 0 0">You just scanned a QR code that opened a demo page. This page shows fake-looking code to illustrate how alarming "technical" output can look — without doing anything harmful.</p>
+      <div class="tips">
+        <strong>Quick safety tips:</strong>
+        <ul>
+          <li>Always check who provided a QR code before scanning.</li>
+          <li>Never enter passwords on pages you don't trust.</li>
+          <li>Enable two-factor authentication (2FA) on important accounts.</li>
+          <li>Keep your device and apps updated.</li>
+        </ul>
+      </div>
+      <footer>Made for educational/demo purposes only — No data is recorded.</footer>
+    </div>
+
+    <script>
+      const btn = document.getElementById('fakeBtn');
+      const reveal = document.getElementById('reveal');
+      const fakeCode = document.getElementById('fakeCode');
+      let clicked = false;
+      btn.addEventListener('click', ()=>{
+        if(!clicked){
+          // simulate "scary" progress then reveal
+          fakeCode.innerHTML = "<span>compiling exploit modules...</span><br/><span>0xdeadbeef...0xfeedface</span><br/><span>running payload...</span><br/><span>encrypting... 92%</span><br/><span>finalizing...</span>";
+          document.getElementById('warningText').textContent = "⚠️ WARNING: System compromise in progress";
+          btn.textContent = "Stop";
+          clicked = true;
+          setTimeout(()=>{ reveal.style.display='block'; fakeCode.style.display='none'; document.getElementById('warningText').textContent = "✅ Demo complete"; btn.style.display='none'; }, 2500);
+        }
+      });
+    </script>
+  </div>
+</body>
+</html>
